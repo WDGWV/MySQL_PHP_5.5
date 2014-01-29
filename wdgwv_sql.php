@@ -48,7 +48,8 @@
   File Checked.
   Checked by: WdG.
   File created: WdG.
-  date: 07-06-2013
+  date: 27-JAN-2014
+  Last update: 29-JAN-2014
 
   © WDGWV, www.wdgwv.com
   All Rights Reserved.
@@ -77,12 +78,28 @@ $wdgwv_sql = array();
 $wdgwv_sql['config']['trigger_error'] = false;
 $wdgwv_sql['config']['fetch_type']    = null; //PDO::FETCH_ASSOC (names)
 											  //PDO::FETCH_NUM   (array 0,1,2,3,etc)
+$wdgwv_sql['error']					  = null; //WGT: FIX: 29-JAN-2014
 
+#function wdgwv_sql_real_escape_string ( string )
+# Replaces mysql_real_escape_string.
+## WdG: 29 JAN 2014
+function wdgwv_sql_real_escape_string ( $string )
+{
+	return $string; //NOT NEEDED FOR PDO
+}
 
-#function wdgwv_sql_trigger_error( error )
+#function wdgwv_sql_escape_string ( string )
+# Replaces mysql_escape_string.
+## WdG: 29 JAN 2014
+function wdgwv_sql_escape_string ( $string )
+{
+	return $string; //NOT NEEDED FOR PDO
+}
+
+#function wdgwv_sql_trigger_error ( error )
 # Replaces none, checks if needed to trigger a error otherwise save it in $wdgwv_sql.
 ## WdG: 27 JAN 2014
-function wdgwv_sql_trigger_error($error)
+function wdgwv_sql_trigger_error ($error)
 {
 	//Load global config
 	global $wdgwv_sql;
@@ -249,7 +266,10 @@ function wdgwv_sql_fetch_array( $command, $type = null )
 	}
 	else
 	{
-		return $tempArray; //no error, so just return the data.
+		if ( sizeof($tempArray) == 1) //WGT: Fix 29-JAN-2014 one item then not needed to
+			return $tempArray[0]; // have $arr[0][SELECTED ITEMS]
+		else
+			return $tempArray; //no error, so just return the data.
 	}
 
 	unset($tempArray); // unset the temporary array to clean up the mess.
@@ -285,7 +305,10 @@ function wdgwv_sql_fetch_assoc ( $command, $type = null )
 	}
 	else
 	{
-		return $tempArray; //no error, so just return the data.
+		if ( sizeof($tempArray) == 1) //WGT: Fix 29-JAN-2014 one item then not needed to
+			return $tempArray[0]; // have $arr[0][SELECTED ITEMS]
+		else
+			return $tempArray; //no error, so just return the data.
 	}
 
 	unset($tempArray); // unset the temporary array to clean up the mess.
