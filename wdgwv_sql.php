@@ -213,7 +213,8 @@ function wdgwv_sql_query ( $query, $link = null )
 {
 	//Load global config
 	global $wdgwv_sql;
-	wdgwv_sql_trigger_error(false);	
+	wdgwv_sql_trigger_error(false);	//Reset errors
+	$wdgwv_sql['last']['query'] = $query; //Saves last query...
 
 	// Execute and return command...
 	$cmd = (
@@ -236,10 +237,10 @@ function wdgwv_sql_query ( $query, $link = null )
 	}
 }
 
-#function wdgwv_sql_fetch_array ( query, link = null )
+#function wdgwv_sql_fetch_array ( query, foreach, link = null )
 # Replaces mysql_fetch_array ( query, link )
 ## WdG: 27 JAN 2014
-function wdgwv_sql_fetch_array( $command, $type = null )
+function wdgwv_sql_fetch_array( $command, $foreach = false, $type = null )
 {
 	//Load global config
 	global $wdgwv_sql;
@@ -267,18 +268,27 @@ function wdgwv_sql_fetch_array( $command, $type = null )
 	else
 	{
 		if ( sizeof($tempArray) == 1) //WGT: Fix 29-JAN-2014 one item then not needed to
-			return $tempArray[0]; // have $arr[0][SELECTED ITEMS]
+		{
+		 	if (!$foreach)
+		 		$ret = $tempArray[0]; //!in a foreach.... ;)
+			else
+				$ret = $tempArray; //in a foreach!!!!
+
+			return $ret; // have $arr[0][SELECTED ITEMS]
+		}
 		else
+		{
 			return $tempArray; //no error, so just return the data.
+		}
 	}
 
 	unset($tempArray); // unset the temporary array to clean up the mess.
 }
 
-#function wdgwv_sql_fetch_assoc ( query )
+#function wdgwv_sql_fetch_assoc ( query, foreach )
 # Replaces mysql_fetch_assoc ( query )
 ## WdG: 27 JAN 2014
-function wdgwv_sql_fetch_assoc ( $command, $type = null )
+function wdgwv_sql_fetch_assoc ( $command, $foreach = false, $type = null )
 {
 	//Load global config
 	global $wdgwv_sql;
@@ -306,7 +316,14 @@ function wdgwv_sql_fetch_assoc ( $command, $type = null )
 	else
 	{
 		if ( sizeof($tempArray) == 1) //WGT: Fix 29-JAN-2014 one item then not needed to
-			return $tempArray[0]; // have $arr[0][SELECTED ITEMS]
+		{
+		 	if (!$foreach)
+		 		$ret = $tempArray[0]; //!in a foreach.... ;)
+			else
+				$ret = $tempArray; //in a foreach!!!!
+
+			return $ret; // have $arr[0][SELECTED ITEMS]
+		}
 		else
 			return $tempArray; //no error, so just return the data.
 	}
