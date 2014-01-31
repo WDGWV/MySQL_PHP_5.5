@@ -80,6 +80,19 @@ $wdgwv_sql['config']['fetch_type']    = null; //PDO::FETCH_ASSOC (names)
 											  //PDO::FETCH_NUM   (array 0,1,2,3,etc)
 $wdgwv_sql['error']					  = null; //WGT: FIX: 29-JAN-2014
 
+#function wdgwv_sql_close ( res )
+# Replaces mysql_close( res ).
+## WdG: 29 JAN 2014
+function wdgwv_sql_close ( $res )
+{
+	global $wdgwv_sql;
+
+	$wdgwv_sql['connection'] = null;
+	$wdgwv_sql['connect']    = null;
+	$wdgwv_sql['error']		 = null;
+
+}
+
 #function wdgwv_sql_real_escape_string ( string )
 # Replaces mysql_real_escape_string.
 ## WdG: 29 JAN 2014
