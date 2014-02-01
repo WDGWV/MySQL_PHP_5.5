@@ -49,8 +49,8 @@
   Checked by: WdG.
   File created: WdG.
   date: 27-JAN-2014
-  Last update: 29-JAN-2014
-
+  Last update: 01-FEB-2014
+  
   © WDGWV, www.wdgwv.com
   All Rights Reserved.
 */
@@ -173,17 +173,24 @@ function wdgwv_sql_select_db($database, $link = null)
 
 	//we do nothing with $link.
 
-	//Let's connect...
-	$wdgwv_sql['connection'] = new PDO(
-										'mysql:host=' . 							//Say use mysql with host..
-											$wdgwv_sql['connect']['hostname'] .		// <-- HOST
-										';dbname=' .								//And database...
-											$wdgwv_sql['connect']['database'] .		// <-- DATABASE
-										';charset:utf8',							//With Charset utf8.
-										
-											$wdgwv_sql['connect']['username'],		// <-- USERNAME.
-											$wdgwv_sql['connect']['password']		// <-- PASSWORD.
-									   );
+	try
+	{
+		//Let's connect...
+		$wdgwv_sql['connection'] = new PDO(
+											'mysql:host=' . 							//Say use mysql with host..
+												$wdgwv_sql['connect']['hostname'] .		// <-- HOST
+											';dbname=' .								//And database...
+												$wdgwv_sql['connect']['database'] .		// <-- DATABASE
+											';charset:utf8',							//With Charset utf8.
+											
+												$wdgwv_sql['connect']['username'],		// <-- USERNAME.
+												$wdgwv_sql['connect']['password']		// <-- PASSWORD.
+									   	  );
+	}
+	catch(PDOException $e)
+	{
+		return false;
+	}
 
 	if ( @$wdgwv_sql['connection'] ) //if connected then..
 	{
