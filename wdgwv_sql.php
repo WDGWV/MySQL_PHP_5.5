@@ -49,9 +49,9 @@
   Checked by: WdG.
   File created: WdG.
   date: 27-JAN-2014
-  Last update: 01-FEB-2014
+  Last update: 24-MAR-2014
   
-  © WDGWV, www.wdgwv.com
+  Â© WDGWV, www.wdgwv.com
   All Rights Reserved.
 */
 
@@ -61,9 +61,6 @@
 This set of functions is basicly to support the deprecated mysql_* functions
 So if you replace mysql_* with wdgwv_sql_* it will work again.
 The wdgwv_sql_* is written in pdo, and is only meaned for temporary! 
-There is no error real error triggering, the error triggering works, but errors like
-	you have a error in qour query near XXXXX
-Is not supported yet.
 
 This code is written by WdG (Wesley de Groot) 
 This code is tested by WdG and EH (Edwin Huijboom)
@@ -229,6 +226,7 @@ function wdgwv_sql_error ( )
 #function wdgwv_sql_query( query, link = null )
 # Replaces mysql_query( query, link )
 ## WdG: 27 JAN 2014
+## WdG: 24 MAR 2014: Fix: Now catch and triggers error!
 function wdgwv_sql_query ( $query, $link = null )
 {
 	//Load global config
@@ -236,11 +234,15 @@ function wdgwv_sql_query ( $query, $link = null )
 	wdgwv_sql_trigger_error(false);	//Reset errors
 	$wdgwv_sql['last']['query'] = $query; //Saves last query...
 
-	// Execute and return command...
-	$cmd = (
-			@$wdgwv_sql['connection'] -> query ( $query )
-			// 							^ Query...
-		   );
+	try {
+		// Execute and return command...
+		$cmd = (
+				@$wdgwv_sql['connection'] -> query ( $query )
+				// 							^ Query...
+		   		);
+	} catch (PDOException $ex) {
+		wdgwv_sql_trigger_error('Query: ' . $query . ' Was not executed, ' . $ex);
+	}
 
 	// Is the command executed good?
 	if ( $cmd )
