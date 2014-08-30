@@ -95,7 +95,16 @@ function wdgwv_sql_close ( $res )
 ## WdG: 29 JAN 2014
 function wdgwv_sql_real_escape_string ( $string )
 {
-	return $string; //NOT NEEDED FOR PDO
+    $return = '';
+    for($i = 0; $i < strlen($string); ++$i) {
+        $char = $string[$i];
+        $ord = ord($char);
+        if($char !== "'" && $char !== "\"" && $char !== '\\' && $ord >= 32 && $ord <= 126)
+            $return .= $char;
+        else
+            $return .= '\\x' . dechex($ord);
+    }
+    return $return;
 }
 
 #function wdgwv_sql_escape_string ( string )
@@ -103,7 +112,16 @@ function wdgwv_sql_real_escape_string ( $string )
 ## WdG: 29 JAN 2014
 function wdgwv_sql_escape_string ( $string )
 {
-	return $string; //NOT NEEDED FOR PDO
+    $return = '';
+    for($i = 0; $i < strlen($string); ++$i) {
+        $char = $string[$i];
+        $ord = ord($char);
+        if($char !== "'" && $char !== "\"" && $char !== '\\' && $ord >= 32 && $ord <= 126)
+            $return .= $char;
+        else
+            $return .= '\\x' . dechex($ord);
+    }
+    return $return;
 }
 
 #function wdgwv_sql_trigger_error ( error )
